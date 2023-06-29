@@ -106,12 +106,15 @@ function mine(blockStarted) {
 
         if (solutionNum < difficulty) {
           console.log('SOLUTION FOUND');
+          // @TODO calculate value correctly
+          // sending more than mint fee will result in the difference returned however
           const { request } = await client.simulateContract({
             address: DOOMSDAY_ADDRESS,
             abi: DOOMSDAY_ABI,
             functionName: 'settle',
             args: [location],
-            account
+            account,
+            value: parseEther('0.1')
           });
           await wallet.writeContract(request);
           resolve();

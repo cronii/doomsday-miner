@@ -14,6 +14,4 @@ init config.json
 ```
 
 ## TODO
-
-- minting tx
 - script to run multiple instances of miner, each starting at a different location #

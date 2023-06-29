@@ -13,5 +13,7 @@ init config.json
 }
 ```
 
+`npm start`
+
 ## TODO
 - script to run multiple instances of miner, each starting at a different location #

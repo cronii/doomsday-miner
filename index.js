@@ -21,15 +21,16 @@ const DIFFICULTY_COOLDOWN = 25n;
 const DIFFICULTY_COOLDOWN_SLOPE = 15n;
 
 const { user } = CONFIG;
-
+const account = privateKeyToAccount(user.pkey);
 const transport = webSocket(CONFIG.ws);
+
 const client = createPublicClient({
   chain: mainnet,
   transport
 });
 
 const wallet = createWalletClient({
-  account: privateKeyToAccount(user.pkey),
+  account,
   chain: mainnet,
   transport
 })
@@ -105,11 +106,14 @@ function mine(blockStarted) {
 
         if (solutionNum < difficulty) {
           console.log('SOLUTION FOUND');
-          // @TODO: send proper tx data
-          // await wallet.sendTransaction({
-          //   to: DOOMSDAY_ADDRESS,
-          //   value: parseEther('0.001')
-          // });
+          const { request } = await client.simulateContract({
+            address: DOOMSDAY_ADDRESS,
+            abi: DOOMSDAY_ABI,
+            functionName: 'settle',
+            args: [location],
+            account
+          });
+          await wallet.writeContract(request);
           resolve();
           return;
         }
